@@ -1,6 +1,6 @@
 package io.malicki.ticketify.domain.notification;
 
-import io.malicki.ticketify.common.TopicNames;
+import io.malicki.ticketify.common.kafka.TopicNames;
 import io.malicki.ticketify.domain.ticket.TicketEvent;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

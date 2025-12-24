@@ -1,6 +1,6 @@
 package io.malicki.ticketify.kafka;
 
-import io.malicki.ticketify.common.TopicNames;
+import io.malicki.ticketify.common.kafka.TopicNames;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +21,15 @@ public class KafkaTopicConfig {
         return TopicBuilder.name(TopicNames.NOTIFICATION)
                 .partitions(3)
                 .replicas(3)
+                .build();
+    }
+
+    // DLTs
+    @Bean
+    public NewTopic ticketEventsTopicDlt() {
+        return TopicBuilder.name(TopicNames.DLT.TICKET_DLT)
+                .partitions(1)
+                .replicas(1)
                 .build();
     }
 }

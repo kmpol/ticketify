@@ -2,6 +2,7 @@ package io.malicki.ticketify.domain.ticket;
 
 import io.malicki.ticketify.domain.ticket.data.ProcessedTicketEntity;
 import io.malicki.ticketify.domain.ticket.data.ProcessedTicketRepository;
+import io.malicki.ticketify.exception.retryable.ExternalServiceUnavailableException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,9 @@ public class TicketService {
             return;
         }
         log.info("⚙️Processing ticket of id: {}", ticketId);
+        if(true) {
+            throw new ExternalServiceUnavailableException("Testing retry");
+        }
         ticketProducer.sendTicketEventToNotificationTopic(ticketEvent);
         markTicketCreationProcessed(ticketId);
     }
