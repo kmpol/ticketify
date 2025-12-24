@@ -29,4 +29,16 @@ public record TicketEvent(String ticketId,
                 TicketStatus.CREATED,
                 now);
     }
+
+    public static TicketEvent from(CreateTicketRequest createTicketRequest, String ticketId) {
+        LocalDateTime now = LocalDateTime.now();
+
+        return new TicketEvent(
+                ticketId,
+                createTicketRequest.visitorId(),
+                createTicketRequest.title(),
+                createTicketRequest.description(),
+                TicketStatus.CREATED,
+                now);
+    }
 }
