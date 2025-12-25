@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ProcessedTicketRepository extends JpaRepository<ProcessedTicketEntity, Long> {
+public interface ProcessedTicketRepository extends JpaRepository<ProcessedTicket, Long> {
 
-    Optional<ProcessedTicketEntity> findByTicketId(String ticketId);
+    Optional<ProcessedTicket> findByTicketId(String ticketId);
 }

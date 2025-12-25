@@ -21,6 +21,7 @@ public class NotificationConsumer {
             groupId = "ticket-notifications-group"
     )
     public void consume(ConsumerRecord<String, TicketEvent> record, Acknowledgment ack) {
-        notificationService.processTicketNotification(record, ack);
+        notificationService.processTicketNotification(record);
+        ack.acknowledge();
     }
 }
