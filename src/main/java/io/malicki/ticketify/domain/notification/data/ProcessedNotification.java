@@ -1,4 +1,4 @@
-package io.malicki.ticketify.domain.ticket.data;
+package io.malicki.ticketify.domain.notification.data;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,10 +6,10 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class ProcessedTicketEntity {
+public class ProcessedNotification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

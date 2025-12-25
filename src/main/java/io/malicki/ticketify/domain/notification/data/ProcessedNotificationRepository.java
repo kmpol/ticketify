@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ProcessedNotificationRepository extends JpaRepository<ProcessedNotificationEntity, Long> {
-    Optional<ProcessedNotificationEntity> getProcessedNotificationEntityByTicketId(String ticketId);
+public interface ProcessedNotificationRepository extends JpaRepository<ProcessedNotification, Long> {
+    Optional<ProcessedNotification> findByTicketId(String ticketId);
 }

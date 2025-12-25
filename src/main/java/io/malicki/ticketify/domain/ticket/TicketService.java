@@ -1,13 +1,19 @@
 package io.malicki.ticketify.domain.ticket;
 
-import io.malicki.ticketify.domain.ticket.data.ProcessedTicketEntity;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.malicki.ticketify.common.kafka.TopicNames;
+import io.malicki.ticketify.common.outbox.OutboxStatus;
+import io.malicki.ticketify.common.outbox.data.OutboxEvent;
+import io.malicki.ticketify.common.outbox.data.OutboxEventRepository;
+import io.malicki.ticketify.domain.ticket.data.ProcessedTicket;
 import io.malicki.ticketify.domain.ticket.data.ProcessedTicketRepository;
-import io.malicki.ticketify.exception.retryable.ExternalServiceUnavailableException;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Slf4j
@@ -16,7 +22,9 @@ import java.util.Optional;
 public class TicketService {
 
     private final ProcessedTicketRepository processedTicketRepository;
+    private final OutboxEventRepository outboxEventRepository;
     private final TicketProducer ticketProducer;
+    private final ObjectMapper objectMapper;
 
     @Transactional
     public void processTicketCreation(TicketEvent ticketEvent) {
@@ -27,16 +35,26 @@ public class TicketService {
         }
 
         log.info("⚙️Processing ticket of id: {}", ticketId);
-        if(true) {
-            throw new ExternalServiceUnavailableException("Testing retry");
-        }
+        process(ticketEvent);
+        log.info("⚙️Ticket of id: {} processed, ticket event sent to notification to be handled", ticketId);
+    }
 
-        ticketProducer.sendTicketEventToNotificationTopic(ticketEvent);
-        markTicketCreationProcessed(ticketId);
+    @Transactional
+    public void createTicket(TicketEvent ticketEvent) throws JsonProcessingException {
+        outboxEventRepository.save(
+                OutboxEvent.builder()
+                        .aggregateType("TICKET")
+                        .aggregateId(ticketEvent.ticketId())
+                        .topic(TopicNames.TICKET)
+                        .payload(objectMapper.writeValueAsString(ticketEvent))
+                        .status(OutboxStatus.CREATED)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
     }
 
     private boolean isTicketProcessed(String ticketId) {
-        Optional<ProcessedTicketEntity> processedTicketOptional = processedTicketRepository.findByTicketId(ticketId);
+        Optional<ProcessedTicket> processedTicketOptional = processedTicketRepository.findByTicketId(ticketId);
         if(processedTicketOptional.isPresent()) {
             log.warn("❌Ticket already has been processed of given ticketId: {}, skipping", ticketId);
             return true;
@@ -44,7 +62,9 @@ public class TicketService {
         return false;
     }
 
-    private void markTicketCreationProcessed(String ticketId) {
-        processedTicketRepository.save(ProcessedTicketEntity.builder().ticketId(ticketId).build());
+    private void process(TicketEvent ticketEvent) {
+        String ticketId = ticketEvent.ticketId();
+        ticketProducer.sendTicketEventToNotificationTopic(ticketEvent);
+        processedTicketRepository.save(ProcessedTicket.builder().ticketId(ticketId).build());
     }
 }

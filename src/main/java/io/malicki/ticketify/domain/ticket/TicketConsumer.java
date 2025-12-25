@@ -1,5 +1,6 @@
 package io.malicki.ticketify.domain.ticket;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.malicki.ticketify.common.kafka.TopicNames;
 import io.malicki.ticketify.common.kafka.model.DltMessage;
 import io.malicki.ticketify.exception.NonRetryableException;
