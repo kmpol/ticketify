@@ -7,4 +7,9 @@ public class TopicNames {
     public static class DLT {
         public static final String TICKET_DLT = "ticket-events.DLT";
     }
+
+    public static class Streams {
+        public static final String SPAM_USERS = "spam-users";
+        public static final String URGENT_TICKETS = "urgent-tickets";
+    }
 }

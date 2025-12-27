@@ -2,7 +2,6 @@ package io.malicki.ticketify.domain.ticket.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.malicki.ticketify.domain.ticket.TicketEvent;
-import io.malicki.ticketify.domain.ticket.TicketProducer;
 import io.malicki.ticketify.domain.ticket.TicketService;
 import io.malicki.ticketify.exception.nonretryable.InvalidTicketDataException;
 import jakarta.annotation.Nullable;

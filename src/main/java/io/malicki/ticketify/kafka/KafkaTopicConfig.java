@@ -32,4 +32,21 @@ public class KafkaTopicConfig {
                 .replicas(1)
                 .build();
     }
+
+    //Streams
+    @Bean
+    public NewTopic spamUsersTopic() {
+        return TopicBuilder.name(TopicNames.Streams.SPAM_USERS)
+                .partitions(3)
+                .replicas(3)
+                .build();
+    }
+
+    @Bean
+    public NewTopic urgentTicketsTopic() {
+        return TopicBuilder.name(TopicNames.Streams.URGENT_TICKETS)
+                .partitions(3)
+                .replicas(3)
+                .build();
+    }
 }
